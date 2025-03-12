@@ -43,9 +43,6 @@ module.exports = class Builder extends Creep {
                     return structure.structureType === STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
-            var source = this.pos().findClosestByRange(FIND_SOURCES_ACTIVE)
-
-            console.log(tombstone, droppedSource, container, source);
 
             if (droppedSource) {
                 this.pickup(droppedSource);
@@ -53,8 +50,6 @@ module.exports = class Builder extends Creep {
                 this.pickup(tombstone);
             } else if (container) {
                 this.harvestFrom(container);
-            } else {
-                this.harvestFrom(source);
             }
         } else if (this.getMemory().state === 'building') {
             var target = this.decideTarget();

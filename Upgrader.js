@@ -9,8 +9,8 @@ module.exports = class Upgrader extends Creep {
     }
 
     upgradeController(controller) {
-        if (this.getCreep().upgradeController(this.getRoom().controller) == ERR_NOT_IN_RANGE) {
-            this.moveTo(this.getRoom().controller);
+        if (this.getCreep().upgradeController(controller) == ERR_NOT_IN_RANGE) {
+            this.moveTo(controller);
         }
     }
 
@@ -33,9 +33,6 @@ module.exports = class Upgrader extends Creep {
                     return structure.structureType === STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
-            var source = this.pos().findClosestByRange(FIND_SOURCES_ACTIVE)
-
-            console.log(tombstone, droppedSource, container, source);
 
             if (droppedSource) {
                 this.pickup(droppedSource);
@@ -43,8 +40,6 @@ module.exports = class Upgrader extends Creep {
                 this.pickup(tombstone);
             } else if (container) {
                 this.harvestFrom(container);
-            } else {
-                this.harvestFrom(source);
             }
         } else if (this.getMemory().state === 'upgrading') {
             var controller = this.getRoom().controller;
