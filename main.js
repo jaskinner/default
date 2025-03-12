@@ -29,7 +29,7 @@ module.exports.loop = function () {
         });
     }
 
-    if (counts.construction) {
+    if (counts.construction && counts.harvester >= 2 && counts.upgrader >= 2) {
         Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE, MOVE, CARRY, CARRY], 'Builder' + Game.time, {
             memory: { role: 'builder' }
         });

@@ -26,8 +26,13 @@ module.exports = class Upgrader extends Creep {
         this.decideState();
 
         if (this.getMemory().state === 'harvesting') {
-            var source = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES) || this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
-            this.pickup(source);
+            var droppedSource = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES);
+            var source = this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
+            if (droppedSource) {
+                this.pickup(droppedSource);
+            } else {
+                this.harvestFrom(source);
+            }
         } else if (this.getMemory().state === 'upgrading') {
             var controller = this.getRoom().controller;
             this.upgradeController(controller);
