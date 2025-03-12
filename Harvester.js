@@ -33,12 +33,16 @@ class Harvester extends Creep {
     }
 
     transfer() {
-        if (this.getType() === 'shovel') {
-            return;
-        }
         var targets = this.getRoom().find(FIND_STRUCTURES, {
             filter: this.structureFilter.bind(this)
         });
+
+        if (Game.spawns['Spawn1'].store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
+            targets = targets.filter((structure) => {
+                return (structure.structureType === STRUCTURE_SPAWN || structure.structureType === STRUCTURE_EXTENSION) && structure.store.getUsedCapacity(RESOURCE_ENERGY) < structure.store.getCapacity(RESOURCE_ENERGY);
+            });
+        }
+
 
         if (targets.length > 0) {
             this.transferTo(targets[0], RESOURCE_ENERGY);
@@ -71,9 +75,13 @@ class Truck extends Harvester {
     }
 
     harvest() {
-        var source = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES) || this.pos().findClosestByRange(FIND_TOMBSTONES);
+        var source = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES);
+        var tombstone = this.pos().findClosestByRange(FIND_TOMBSTONES);
 
-        if (source) {
+        if (tombstone) {
+            this.withdrawFrom(tombstone);
+        }
+        else if (source) {
             this.pickup(source);
         }
     }

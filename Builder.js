@@ -43,7 +43,7 @@ module.exports = class Builder extends Creep {
             });
             
             if (container) {
-                this.transferFrom(container, RESOURCE_ENERGY);
+                this.withdrawFrom(container, RESOURCE_ENERGY);
             }
         } else if (this.getMemory().state === 'building') {
             var target = this.decideTarget();

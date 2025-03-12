@@ -1,6 +1,7 @@
 var { Harvester, Truck } = require('Harvester');
 var Upgrader = require('Upgrader');
 var Builder = require('Builder');
+var Repairer = require('Repairer');
 
 module.exports.loop = function () {
     for (let creepName in Memory.creeps) {
@@ -17,16 +18,17 @@ module.exports.loop = function () {
         builder: _.filter(Game.creeps, (creep) => creep.memory.role === 'builder').length,
         truck: _.filter(Game.creeps, (creep) => creep.memory.type === 'truck').length,
         shovel: _.filter(Game.creeps, (creep) => creep.memory.type === 'shovel').length,
+        repairer: _.filter(Game.creeps, (creep) => creep.memory.role === 'repairer').length,
         construction: Game.constructionSites
     };
 
     if (counts.harvester < 2) {
-        if (counts.harvester === 0 || counts.truck > 0) {
+        if (counts.harvester === 0 || counts.shovel < 1) {
             Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK], 'Harvester-Shovel' + Game.time, {
                 memory: { role: 'harvester', type: 'shovel' }
             });
         } else {
-            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
+            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
                 memory: { role: 'harvester', type: 'truck' }
             });
         }
@@ -42,6 +44,12 @@ module.exports.loop = function () {
         let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Builder' + Game.time, {
             memory: { role: 'builder' }
         });
+    }
+
+    if (counts.harvester >= 2 && counts.upgrader >= 2 && counts.repairer < 2) {
+        let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Repairer' + Game.time, {
+            memory: { role: 'repairer' }
+        }); 
     }
 
     for (let creepName in Game.creeps) {
@@ -60,6 +68,9 @@ module.exports.loop = function () {
         } else if (creep.memory.role === 'builder') {
             let builder = new Builder(creep);
             builder.run();
+        } else if (creep.memory.role === 'repairer') {
+            let repairer = new Repairer(creep);
+            repairer.run();
         }
     }
 }

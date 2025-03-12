@@ -1,6 +1,6 @@
 var Creep = require('Creep');
 
-module.exports = class Upgrader extends Creep {
+module.exports = class Repairer extends Creep {
     constructor(creep) {
         super(creep);
         if (!this.getMemory().state) {
@@ -8,16 +8,16 @@ module.exports = class Upgrader extends Creep {
         }
     }
 
-    upgradeController(controller) {
-        if (this.getCreep().upgradeController(controller) == ERR_NOT_IN_RANGE) {
-            this.moveTo(controller);
+    repairTarget(target) {
+        if (this.getCreep().repair(target) == ERR_NOT_IN_RANGE) {
+            this.moveTo(target);
         }
     }
 
     decideState() {
         if (this.getMemory().state === 'harvesting' && this.creep.store.getFreeCapacity() === 0) {
-            this.getMemory().state = 'upgrading';
-        } else if (this.getMemory().state === 'upgrading' && this.creep.store.getUsedCapacity() === 0) {
+            this.getMemory().state = 'repairing';
+        } else if (this.getMemory().state === 'repairing' && this.creep.store.getUsedCapacity() === 0) {
             this.getMemory().state = 'harvesting';
         }
     }
@@ -33,11 +33,16 @@ module.exports = class Upgrader extends Creep {
             });
             
             if (container) {
-                this.transferFrom(container, RESOURCE_ENERGY);
+                this.withdrawFrom(container, RESOURCE_ENERGY);
             }
-        } else if (this.getMemory().state === 'upgrading') {
-            var controller = this.getRoom().controller;
-            this.upgradeController(controller);
+        } else if (this.getMemory().state === 'repairing') {
+            var target = this.pos().findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return structure.hits < structure.hitsMax;
+                }
+            });
+
+            this.repairTarget(target);
         } else if (this.getMemory().state === 'recycling') {
             if (Game.spawns['Spawn1'].recycleCreep(this.getCreep()) === ERR_NOT_IN_RANGE) {
                 this.moveTo(Game.spawns['Spawn1']);

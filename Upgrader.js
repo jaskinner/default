@@ -33,7 +33,7 @@ module.exports = class Upgrader extends Creep {
             });
             
             if (container) {
-                this.transferFrom(container, RESOURCE_ENERGY);
+                this.withdrawFrom(container, RESOURCE_ENERGY);
             }
         } else if (this.getMemory().state === 'upgrading') {
             var controller = this.getRoom().controller;
