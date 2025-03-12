@@ -19,12 +19,30 @@ module.exports = class Creep {
         return this.creep.ticksToLive
     }
 
+    build(target) {
+        if (this.getCreep().build(target) == ERR_NOT_IN_RANGE) {
+            this.moveTo(target);
+        }
+    }
+
     harvestFrom(target) {
-        this.creep.harvest(target);
+        if (this.getCreep().harvest(target) == ERR_NOT_IN_RANGE) {
+            this.moveTo(target);
+        }
     }
 
     moveTo(target) {
         this.creep.moveTo(target);
+    }
+
+    pickup(target) {
+        if (this.getCreep().pickup(target) == ERR_NOT_IN_RANGE) {
+            this.moveTo(target);
+        }
+    }
+
+    pos() {
+        return this.creep.pos;
     }
 
     say(message) {
@@ -32,11 +50,15 @@ module.exports = class Creep {
     }
 
     transferTo(target, resourceType, amount) {
-        this.creep.transfer(target, resourceType, amount);
+        if (this.getCreep().transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
+            this.moveTo(target);
+        }
     }
 
     decideState() {
-        if (this.getMemory().state === 'harvesting' && this.creep.store.getFreeCapacity() === 0) {
+        if (this.getTicksToLive() < 50) {
+            this.getMemory().state = 'recycling';
+        } else if (this.getMemory().state === 'harvesting' && this.creep.store.getFreeCapacity() === 0) {
             this.getMemory().state = 'transfering';
         } else if (this.getMemory().state === 'transfering' && this.creep.store.getUsedCapacity() === 0) {
             this.getMemory().state = 'harvesting';

@@ -9,7 +9,9 @@ module.exports = class Upgrader extends Creep {
     }
 
     upgradeController(controller) {
-        this.creep.upgradeController(controller);
+        if (this.getCreep().upgradeController(this.getRoom().controller) == ERR_NOT_IN_RANGE) {
+            this.moveTo(this.getRoom().controller);
+        }
     }
 
     decideState() {
@@ -23,38 +25,15 @@ module.exports = class Upgrader extends Creep {
     run() {
         this.decideState();
 
-        if (this.getTicksToLive() < 50) {
-            if (this.getCreep().store.getUsedCapacity() === 0) {
-                this.getCreep().suicide();
-            }
-
-            this.getMemory().state = 'transfering';
-            this.say('I am dying');
-            Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Upgrader' + Game.time, {
-                memory: { role: 'upgrader' }
-            });
-        }
-
         if (this.getMemory().state === 'harvesting') {
-            var sources = this.getRoom().find(FIND_SOURCES);
-            this.moveTo(sources[0]);
-            this.harvestFrom(sources[0]);
+            var source = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES) || this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
+            this.pickup(source);
         } else if (this.getMemory().state === 'upgrading') {
             var controller = this.getRoom().controller;
-            this.moveTo(controller);
             this.upgradeController(controller);
-        } else {
-            var targets = this.getRoom().find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType === STRUCTURE_EXTENSION ||
-                        structure.structureType === STRUCTURE_SPAWN) &&
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                }
-            });
-
-            if (targets.length > 0) {
-                this.moveTo(targets[0]);
-                this.transferTo(targets[0], RESOURCE_ENERGY);
+        } else if (this.getMemory().state === 'recycling') {
+            if (Game.spawns['Spawn1'].recycleCreep(this.getCreep()) === ERR_NOT_IN_RANGE) {
+                this.moveTo(Game.spawns['Spawn1']);
             }
         }
     }

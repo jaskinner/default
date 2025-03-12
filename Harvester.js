@@ -11,22 +11,9 @@ module.exports = class Harvester extends Creep {
     run() {
         this.decideState();
 
-        if (this.getTicksToLive() < 50) {
-            if (this.getCreep().store.getUsedCapacity() === 0) {
-                this.getCreep().suicide();
-            }
-
-            this.getMemory().state = 'transfering';
-            this.say('I am dying');
-            Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester' + Game.time, {
-                memory: { role: 'harvester' }
-            });
-        }
-
         if (this.getMemory().state === 'harvesting') {
-            var sources = this.getRoom().find(FIND_SOURCES);
-            this.moveTo(sources[0]);
-            this.harvestFrom(sources[0]);
+            var source = this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
+            this.harvestFrom(source);
         } else if (this.getMemory().state === 'transfering') {
             var targets = this.getRoom().find(FIND_STRUCTURES, {
                 filter: (structure) => {
@@ -37,8 +24,19 @@ module.exports = class Harvester extends Creep {
             });
 
             if (targets.length > 0) {
-                this.moveTo(targets[0]);
                 this.transferTo(targets[0], RESOURCE_ENERGY);
+            } else {
+                var target = this.pos().findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
+
+                if (!target) {
+                    this.getCreep().drop(RESOURCE_ENERGY);
+                } else {
+                    this.build(target);
+                }
+            }
+        } else if (this.getMemory().state === 'recycling') {
+            if (Game.spawns['Spawn1'].recycleCreep(this.getCreep()) === ERR_NOT_IN_RANGE) {
+                this.moveTo(Game.spawns['Spawn1']);
             }
         }
     }
