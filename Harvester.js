@@ -12,6 +12,10 @@ module.exports = class Harvester extends Creep {
         this.decideState();
 
         if (this.getTicksToLive() < 50) {
+            if (this.getCreep().store.getUsedCapacity() === 0) {
+                this.getCreep().suicide();
+            }
+
             this.getMemory().state = 'transfering';
             this.say('I am dying');
             Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester' + Game.time, {

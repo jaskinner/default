@@ -9,13 +9,19 @@ module.exports.loop = function () {
         }
     }
 
-    const creepCount = Object.keys(Game.creeps).length;
+    const counts = {
+        creep: Object.keys(Game.creeps).length,
+        harvester: _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length,
+        upgrader: _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader').length
+    };
 
-    if (creepCount === 0) {
+    if (counts.harvester < 2) {
         Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester' + Game.time, {
             memory: { role: 'harvester' }
         });
-    } else if (creepCount < 2) {
+    }
+
+    if (counts.upgrader < 2 && counts.harvester >= 2) {
         Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Upgrader' + Game.time, {
             memory: { role: 'upgrader' }
         });
