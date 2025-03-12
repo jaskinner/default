@@ -26,10 +26,23 @@ module.exports = class Upgrader extends Creep {
         this.decideState();
 
         if (this.getMemory().state === 'harvesting') {
+            var tombstone = this.pos().findClosestByRange(FIND_TOMBSTONES);
             var droppedSource = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES);
-            var source = this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
+            var container = this.pos().findClosestByRange(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return structure.structureType === STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
+                }
+            });
+            var source = this.pos().findClosestByRange(FIND_SOURCES_ACTIVE)
+
+            console.log(tombstone, droppedSource, container, source);
+
             if (droppedSource) {
                 this.pickup(droppedSource);
+            } else if (tombstone) {
+                this.pickup(tombstone);
+            } else if (container) {
+                this.harvestFrom(container);
             } else {
                 this.harvestFrom(source);
             }
