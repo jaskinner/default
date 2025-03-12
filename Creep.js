@@ -27,6 +27,10 @@ module.exports = class Creep {
         this.creep.moveTo(target);
     }
 
+    say(message) {
+        this.creep.say(message);
+    }
+
     transferTo(target, resourceType, amount) {
         this.creep.transfer(target, resourceType, amount);
     }

@@ -16,7 +16,7 @@ module.exports.loop = function () {
             memory: { role: 'harvester' }
         });
     } else if (creepCount < 2) {
-        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Upgrader' + creepCount, {
+        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Upgrader', {
             memory: { role: 'upgrader' }
         });
     }
