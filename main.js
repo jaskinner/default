@@ -22,13 +22,13 @@ module.exports.loop = function () {
         construction: Game.constructionSites
     };
 
-    if (counts.harvester < 2) {
-        if (counts.harvester === 0 || counts.shovel < 1) {
-            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK], 'Harvester-Shovel' + Game.time, {
+    if (counts.harvester < 3) {
+        if (counts.harvester === 0 || counts.shovel < 2) {
+            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK], 'Harvester-Shovel' + Game.time, {
                 memory: { role: 'harvester', type: 'shovel' }
             });
         } else {
-            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
+            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
                 memory: { role: 'harvester', type: 'truck' }
             });
         }
@@ -46,11 +46,11 @@ module.exports.loop = function () {
         });
     }
 
-    if (counts.harvester >= 2 && counts.upgrader >= 2 && counts.repairer < 2) {
-        let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Repairer' + Game.time, {
-            memory: { role: 'repairer' }
-        }); 
-    }
+    // if (counts.harvester >= 2 && counts.upgrader >= 2 && counts.repairer < 2) {
+    //     let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Repairer' + Game.time, {
+    //         memory: { role: 'repairer' }
+    //     }); 
+    // }
 
     for (let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];
@@ -69,8 +69,9 @@ module.exports.loop = function () {
             let builder = new Builder(creep);
             builder.run();
         } else if (creep.memory.role === 'repairer') {
-            let repairer = new Repairer(creep);
-            repairer.run();
+            creep.memory.role = 'builder';
+            // let repairer = new Repairer(creep);
+            // repairer.run();
         }
     }
 }

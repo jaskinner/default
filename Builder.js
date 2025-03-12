@@ -20,7 +20,7 @@ module.exports = class Builder extends Creep {
         const sites = this.getRoom().find(FIND_MY_CONSTRUCTION_SITES);
 
         if (!sites) {
-            return;
+            return null;
         }
 
         const target = sites.reduce((best, current) => {
@@ -47,6 +47,8 @@ module.exports = class Builder extends Creep {
             }
         } else if (this.getMemory().state === 'building') {
             var target = this.decideTarget();
+
+            console.log(target)
 
             if (!target) {
                 this.getCreep().drop(RESOURCE_ENERGY);
