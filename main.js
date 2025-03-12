@@ -12,11 +12,11 @@ module.exports.loop = function () {
     const creepCount = Object.keys(Game.creeps).length;
 
     if (creepCount === 0) {
-        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
+        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester' + Game.time, {
             memory: { role: 'harvester' }
         });
     } else if (creepCount < 2) {
-        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Upgrader', {
+        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Upgrader' + Game.time, {
             memory: { role: 'upgrader' }
         });
     }

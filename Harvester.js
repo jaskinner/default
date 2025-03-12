@@ -14,7 +14,7 @@ module.exports = class Harvester extends Creep {
         if (this.getTicksToLive() < 50) {
             this.getMemory().state = 'transfering';
             this.say('I am dying');
-            Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
+            Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester' + Game.time, {
                 memory: { role: 'harvester' }
             });
         }

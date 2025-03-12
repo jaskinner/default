@@ -25,8 +25,8 @@ module.exports = class Upgrader extends Creep {
 
         if (this.getTicksToLive() < 50) {
             this.getMemory().state = 'transfering';
-            this.getMemory().role = 'harvester';
-            Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Upgrader', {
+            this.say('I am dying');
+            Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Upgrader' + Game.time, {
                 memory: { role: 'upgrader' }
             });
         }
