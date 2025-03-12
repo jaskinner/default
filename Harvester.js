@@ -9,6 +9,15 @@ module.exports = class Harvester extends Creep {
     }
 
     run() {
+        this.decideState();
+
+        if (this.getTicksToLive() < 50) {
+            this.getMemory().state = 'transfering';
+            Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
+                memory: { role: 'harvester' }
+            });
+        }
+
         if (this.getMemory().state === 'harvesting') {
             var sources = this.getRoom().find(FIND_SOURCES);
             this.moveTo(sources[0]);

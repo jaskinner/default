@@ -1,4 +1,5 @@
 var Harvester = require('Harvester');
+var Upgrader = require('Upgrader');
 
 module.exports.loop = function () {
     for (let creepName in Memory.creeps) {
@@ -11,8 +12,12 @@ module.exports.loop = function () {
     const creepCount = Object.keys(Game.creeps).length;
     
     if (creepCount === 0) {
-        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester1', {
+        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
             memory: { role: 'harvester' }
+        });
+    } else if (creepCount < 2) {
+        Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Upgrader' + creepCount, {
+            memory: { role: 'upgrader' }
         });
     }
     
@@ -20,8 +25,10 @@ module.exports.loop = function () {
         let creep = Game.creeps[creepName];
         if (creep.memory.role === 'harvester') {
             let harvester = new Harvester(creep);
-            harvester.decideState();
             harvester.run();
+        } else if (creep.memory.role === 'upgrader') {
+            let upgrader = new Upgrader(creep);
+            upgrader.run();
         }
     }
 }

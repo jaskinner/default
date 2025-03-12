@@ -27,6 +27,10 @@ module.exports = class Creep {
         this.creep.transfer(target, resourceType, amount);
     }
 
+    getTicksToLive() {
+        return this.creep.ticksToLive
+    }
+
     decideState() {
         if (this.getMemory().state === 'harvesting' && this.creep.store.getFreeCapacity() === 0) {
             this.getMemory().state = 'transfering';
