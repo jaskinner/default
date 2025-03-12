@@ -16,6 +16,20 @@ module.exports = class Builder extends Creep {
         }
     }
 
+    decideTarget() {
+        const sites = this.getRoom().find(FIND_MY_CONSTRUCTION_SITES);
+
+        if (!sites) {
+            return;
+        }
+
+        const target = sites.reduce((best, current) => {
+            const bestProgress = best.progress / best.progressTotal;
+            const currentProgress = current.progress / current.progressTotal;
+            return currentProgress > bestProgress ? current : best;
+        }, sites[0]);
+    }
+
     run() {
         this.decideState();
 
@@ -23,7 +37,7 @@ module.exports = class Builder extends Creep {
             var source = this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
             this.harvestFrom(source);
         } else if (this.getMemory().state === 'building') {
-            var target = this.pos().findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
+            var target = this.decideTarget();
 
             if (!target) {
                 this.getCreep().drop(RESOURCE_ENERGY);
