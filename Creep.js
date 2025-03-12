@@ -3,32 +3,32 @@ module.exports = class Creep {
         this.creep = creep;
     }
 
-    getMemory() {
-        return this.creep.memory;
-    }
-
     getCreep() {
         return this.creep;
+    }
+
+    getMemory() {
+        return this.creep.memory;
     }
 
     getRoom() {
         return this.creep.room;
     }
 
+    getTicksToLive() {
+        return this.creep.ticksToLive
+    }
+
+    harvestFrom(target) {
+        this.creep.harvest(target);
+    }
+
     moveTo(target) {
         this.creep.moveTo(target);
     }
 
-    harvest(target) {
-        this.creep.harvest(target);
-    }
-
-    transfer(target, resourceType, amount) {
+    transferTo(target, resourceType, amount) {
         this.creep.transfer(target, resourceType, amount);
-    }
-
-    getTicksToLive() {
-        return this.creep.ticksToLive
     }
 
     decideState() {

@@ -10,7 +10,7 @@ module.exports.loop = function () {
     }
 
     const creepCount = Object.keys(Game.creeps).length;
-    
+
     if (creepCount === 0) {
         Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], 'Harvester', {
             memory: { role: 'harvester' }
@@ -20,7 +20,7 @@ module.exports.loop = function () {
             memory: { role: 'upgrader' }
         });
     }
-    
+
     for (let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];
         if (creep.memory.role === 'harvester') {

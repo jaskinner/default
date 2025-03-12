@@ -34,7 +34,7 @@ module.exports = class Upgrader extends Creep {
         if (this.getMemory().state === 'harvesting') {
             var sources = this.getRoom().find(FIND_SOURCES);
             this.moveTo(sources[0]);
-            this.harvest(sources[0]);
+            this.harvestFrom(sources[0]);
         } else if (this.getMemory().state === 'upgrading') {
             var controller = this.getRoom().controller;
             this.moveTo(controller);

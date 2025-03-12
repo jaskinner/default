@@ -21,7 +21,7 @@ module.exports = class Harvester extends Creep {
         if (this.getMemory().state === 'harvesting') {
             var sources = this.getRoom().find(FIND_SOURCES);
             this.moveTo(sources[0]);
-            this.harvest(sources[0]);
+            this.harvestFrom(sources[0]);
         } else if (this.getMemory().state === 'transfering') {
             var targets = this.getRoom().find(FIND_STRUCTURES, {
                 filter: (structure) => {
@@ -33,7 +33,7 @@ module.exports = class Harvester extends Creep {
 
             if (targets.length > 0) {
                 this.moveTo(targets[0]);
-                this.transfer(targets[0], RESOURCE_ENERGY);
+                this.transferTo(targets[0], RESOURCE_ENERGY);
             }
         }
     }
