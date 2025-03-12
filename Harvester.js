@@ -1,6 +1,6 @@
 var Creep = require('Creep');
 
-module.exports = class Harvester extends Creep {
+class Harvester extends Creep {
     constructor(creep) {
         super(creep);
         if (!this.getMemory().state) {
@@ -8,13 +8,24 @@ module.exports = class Harvester extends Creep {
         }
     }
 
+    energyStores() {
+        return [STRUCTURE_EXTENSION, STRUCTURE_SPAWN, STRUCTURE_CONTAINER];
+    }
+
+    getClosestEnergySource() {
+        return this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
+    }
+
+    structureFilter(structure) {
+        return this.energyStores().includes(structure.structureType) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+    }
+
     run() {
         this.decideState();
-        const energyStores = [STRUCTURE_EXTENSION, STRUCTURE_SPAWN, STRUCTURE_CONTAINER];
 
         if (this.getMemory().state === 'harvesting') {
             var droppedSource = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES) || this.pos().findClosestByRange(FIND_TOMBSTONES);
-            var source = this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
+            var source = this.getClosestEnergySource();
 
             if (droppedSource) {
                 this.pickup(droppedSource);
@@ -24,10 +35,7 @@ module.exports = class Harvester extends Creep {
             this.harvestFrom(source);
         } else if (this.getMemory().state === 'transfering') {
             var targets = this.getRoom().find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return (energyStores.includes(structure.structureType)) &&
-                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                }
+                filter: this.structureFilter.bind(this)
             });
 
             if (targets.length > 0) {
@@ -42,3 +50,22 @@ module.exports = class Harvester extends Creep {
         }
     }
 }
+
+class Truck extends Harvester {
+    constructor(creep) {
+        super(creep);
+        if (!this.getMemory().state) {
+            this.getMemory().state = 'harvesting';
+        }
+    }
+
+    run() {
+        // stub
+    }
+
+}
+
+module.exports = {
+    Harvester,
+    Truck
+};

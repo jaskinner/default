@@ -1,4 +1,4 @@
-var Harvester = require('Harvester');
+var { Harvester, Truck } = require('Harvester');
 var Upgrader = require('Upgrader');
 var Builder = require('Builder');
 
@@ -47,8 +47,13 @@ module.exports.loop = function () {
     for (let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];
         if (creep.memory.role === 'harvester') {
-            let harvester = new Harvester(creep);
-            harvester.run();
+            if (creep.memory.type === 'truck') {
+                let truck = new Truck(creep);
+                truck.run();
+            } else {
+                let harvester = new Harvester(creep);
+                harvester.run();
+            }
         } else if (creep.memory.role === 'upgrader') {
             let upgrader = new Upgrader(creep);
             upgrader.run();
