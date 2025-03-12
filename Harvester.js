@@ -12,7 +12,13 @@ module.exports = class Harvester extends Creep {
         this.decideState();
 
         if (this.getMemory().state === 'harvesting') {
+            var droppedSource = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES);
             var source = this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
+            if (droppedSource) {
+                this.pickup(droppedSource);
+            } else {
+                this.harvestFrom(source);
+            }
             this.harvestFrom(source);
         } else if (this.getMemory().state === 'transfering') {
             var targets = this.getRoom().find(FIND_STRUCTURES, {

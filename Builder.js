@@ -28,14 +28,21 @@ module.exports = class Builder extends Creep {
             const currentProgress = current.progress / current.progressTotal;
             return currentProgress > bestProgress ? current : best;
         }, sites[0]);
+
+        return target;
     }
 
     run() {
         this.decideState();
 
         if (this.getMemory().state === 'harvesting') {
+            var droppedSource = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES);
             var source = this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
-            this.harvestFrom(source);
+            if (droppedSource) {
+                this.pickup(droppedSource);
+            } else {
+                this.harvestFrom(source);
+            }
         } else if (this.getMemory().state === 'building') {
             var target = this.decideTarget();
 

@@ -14,10 +14,12 @@ module.exports.loop = function () {
         creep: Object.keys(Game.creeps).length,
         harvester: _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length,
         upgrader: _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader').length,
+        builder: _.filter(Game.creeps, (creep) => creep.memory.role === 'builder').length,
+        construction: Game.constructionSites
     };
 
     if (counts.harvester < 2) {
-        Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK], 'Harvester' + Game.time, {
+        Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, CARRY], 'Harvester' + Game.time, {
             memory: { role: 'harvester' }
         });
     }
@@ -28,8 +30,8 @@ module.exports.loop = function () {
         });
     }
 
-    if (counts.construction && counts.harvester >= 2 && counts.upgrader >= 2) {
-        Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Builder' + Game.time, {
+    if (counts.construction && counts.harvester >= 2 && counts.upgrader >= 2 && counts.builder < 2) {
+        let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Builder' + Game.time, {
             memory: { role: 'builder' }
         });
     }
