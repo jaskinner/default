@@ -15,17 +15,19 @@ module.exports.loop = function () {
         harvester: _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length,
         upgrader: _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader').length,
         builder: _.filter(Game.creeps, (creep) => creep.memory.role === 'builder').length,
+        truck: _.filter(Game.creeps, (creep) => creep.memory.type === 'truck').length,
+        shovel: _.filter(Game.creeps, (creep) => creep.memory.type === 'shovel').length,
         construction: Game.constructionSites
     };
 
     if (counts.harvester < 2) {
-        if (counts.harvester === 0) {
+        if (counts.harvester === 0 || counts.truck > 0) {
             Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK], 'Harvester-Shovel' + Game.time, {
-                memory: { role: 'harvester' }
+                memory: { role: 'harvester', type: 'shovel' }
             });
         } else {
             Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
-                memory: { role: 'harvester' }
+                memory: { role: 'harvester', type: 'truck' }
             });
         }
     }

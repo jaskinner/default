@@ -10,6 +10,7 @@ module.exports = class Harvester extends Creep {
 
     run() {
         this.decideState();
+        const energyStores = [STRUCTURE_EXTENSION, STRUCTURE_SPAWN, STRUCTURE_CONTAINER];
 
         if (this.getMemory().state === 'harvesting') {
             var droppedSource = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES);
@@ -23,8 +24,7 @@ module.exports = class Harvester extends Creep {
         } else if (this.getMemory().state === 'transfering') {
             var targets = this.getRoom().find(FIND_STRUCTURES, {
                 filter: (structure) => {
-                    return (structure.structureType === STRUCTURE_EXTENSION ||
-                        structure.structureType === STRUCTURE_SPAWN) &&
+                    return (energyStores.includes(structure.structureType)) &&
                         structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
