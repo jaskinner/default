@@ -1,0 +1,31 @@
+var Creep = require('Creep');
+
+module.exports = class Harvester extends Creep {
+    constructor(creep) {
+        super(creep);
+        if (!this.getMemory().state) {
+            this.getMemory().state = 'harvesting';
+        }
+    }
+
+    run() {
+        if (this.getMemory().state === 'harvesting') {
+            var sources = this.getRoom().find(FIND_SOURCES);
+            this.moveTo(sources[0]);
+            this.harvest(sources[0]);
+        } else if (this.getMemory().state === 'transfering') {
+            var targets = this.getRoom().find(FIND_STRUCTURES, {
+                filter: (structure) => {
+                    return (structure.structureType === STRUCTURE_EXTENSION ||
+                        structure.structureType === STRUCTURE_SPAWN) &&
+                        structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                }
+            });
+
+            if (targets.length > 0) {
+                this.moveTo(targets[0]);
+                this.transfer(targets[0], RESOURCE_ENERGY);
+            }
+        }
+    }
+}
