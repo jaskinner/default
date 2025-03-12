@@ -36,20 +36,14 @@ module.exports = class Builder extends Creep {
         this.decideState();
 
         if (this.getMemory().state === 'harvesting') {
-            var tombstone = this.pos().findClosestByRange(FIND_TOMBSTONES);
-            var droppedSource = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES);
             var container = this.pos().findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return structure.structureType === STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
-
-            if (droppedSource) {
-                this.pickup(droppedSource);
-            } else if (tombstone) {
-                this.pickup(tombstone);
-            } else if (container) {
-                this.harvestFrom(container);
+            
+            if (container) {
+                this.transferFrom(container, RESOURCE_ENERGY);
             }
         } else if (this.getMemory().state === 'building') {
             var target = this.decideTarget();

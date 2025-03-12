@@ -55,6 +55,12 @@ module.exports = class Creep {
         }
     }
 
+    transferFrom(target, resourceType, amount) {
+        if (this.getCreep().withdraw(target, resourceType) == ERR_NOT_IN_RANGE) {
+            this.moveTo(target);
+        }
+    }
+
     decideState() {
         if (this.getTicksToLive() < 50) {
             this.getMemory().state = 'recycling';
