@@ -19,9 +19,15 @@ module.exports.loop = function () {
     };
 
     if (counts.harvester < 2) {
-        Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, CARRY], 'Harvester' + Game.time, {
-            memory: { role: 'harvester' }
-        });
+        if (counts.harvester === 0) {
+            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK], 'Harvester-Shovel' + Game.time, {
+                memory: { role: 'harvester' }
+            });
+        } else {
+            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
+                memory: { role: 'harvester' }
+            });
+        }
     }
 
     if (counts.upgrader < 2 && counts.harvester >= 2) {
