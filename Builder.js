@@ -49,7 +49,7 @@ module.exports = class Builder extends Creep {
             var target = this.decideTarget();
 
             if (!target) {
-                this.getCreep().drop(RESOURCE_ENERGY);
+                this.getMemory().state = 'recycling';
             } else {
                 this.build(target);
             }

@@ -19,7 +19,7 @@ module.exports.loop = function () {
         truck: _.filter(Game.creeps, (creep) => creep.memory.type === 'truck').length,
         shovel: _.filter(Game.creeps, (creep) => creep.memory.type === 'shovel').length,
         repairer: _.filter(Game.creeps, (creep) => creep.memory.role === 'repairer').length,
-        construction: Game.constructionSites
+        construction: _.filter(Game.constructionSites, (site) => site.my)
     };
 
     if (counts.harvester < 4) {
@@ -40,17 +40,17 @@ module.exports.loop = function () {
         });
     }
 
-    if (counts.construction && counts.harvester >= 2 && counts.upgrader >= 2 && counts.builder < 2) {
+    if (counts.construction.length && counts.harvester >= 2 && counts.upgrader >= 2 && counts.builder < 2) {
         let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Builder' + Game.time, {
             memory: { role: 'builder' }
         });
     }
 
-    // if (counts.harvester >= 2 && counts.upgrader >= 2 && counts.repairer < 2) {
-    //     let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Repairer' + Game.time, {
-    //         memory: { role: 'repairer' }
-    //     }); 
-    // }
+    if (counts.harvester >= 2 && counts.upgrader >= 2 && counts.repairer < 2) {
+        let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Repairer' + Game.time, {
+            memory: { role: 'repairer' }
+        }); 
+    }
 
     for (let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];
@@ -69,9 +69,8 @@ module.exports.loop = function () {
             let builder = new Builder(creep);
             builder.run();
         } else if (creep.memory.role === 'repairer') {
-            creep.memory.role = 'builder';
-            // let repairer = new Repairer(creep);
-            // repairer.run();
+            let repairer = new Repairer(creep);
+            repairer.run();
         }
     }
 }

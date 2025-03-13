@@ -8,8 +8,14 @@ class Harvester extends Creep {
         }
     }
 
-    energyStores() {
-        return [STRUCTURE_EXTENSION, STRUCTURE_SPAWN, STRUCTURE_CONTAINER];
+    getLargestDroppedEnergy() {
+        return this.getRoom().find(FIND_DROPPED_RESOURCES, {
+            filter: (resource) => {
+                return resource.resourceType === RESOURCE_ENERGY;
+            }
+        }).sort((a, b) => {
+            return b.amount - a.amount;
+        })[0];
     }
 
     getClosestEnergySource() {
@@ -28,28 +34,8 @@ class Harvester extends Creep {
         }
     }
 
-    structureFilter(structure) {
-        return this.energyStores().includes(structure.structureType) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-    }
-
     transfer() {
-        var targets = this.getRoom().find(FIND_STRUCTURES, {
-            filter: this.structureFilter.bind(this)
-        });
-
-        if (Game.spawns['Spawn1'].store.getFreeCapacity(RESOURCE_ENERGY) > 0) {
-            targets = targets.filter((structure) => {
-                return (structure.structureType === STRUCTURE_SPAWN
-                    //  || structure.structureType === STRUCTURE_EXTENSION
-                ) && structure.store.getUsedCapacity(RESOURCE_ENERGY) < structure.store.getCapacity(RESOURCE_ENERGY);
-            });
-        }
-
-        if (targets.length > 0) {
-            this.transferTo(targets[0], RESOURCE_ENERGY);
-        } else {
-            this.getCreep().drop(RESOURCE_ENERGY);
-        }
+        this.getCreep().drop(RESOURCE_ENERGY);
     }
 
     run() {
@@ -76,13 +62,29 @@ class Truck extends Harvester {
     }
 
     harvest() {
-        var source = this.pos().findClosestByRange(FIND_DROPPED_RESOURCES);
+        var source = this.getLargestDroppedEnergy();
         var tombstone = this.pos().findClosestByRange(FIND_TOMBSTONES);
 
         if (tombstone) {
             this.withdrawFrom(tombstone, RESOURCE_ENERGY);
         } else if (source) {
             this.pickup(source);
+        }
+    }
+
+    transfer() {
+        var targets = this.getRoom().energyAvailable < this.getRoom().energyCapacityAvailable ? this.getRoom().find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return (structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN) && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+            }
+        }) : this.getRoom().find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return structure.structureType === STRUCTURE_CONTAINER && structure.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+            }
+        });
+
+        if (targets.length > 0) {
+            this.transferTo(targets[0], RESOURCE_ENERGY);
         }
     }
 }
