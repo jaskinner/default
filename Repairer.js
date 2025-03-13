@@ -44,9 +44,7 @@ module.exports = class Repairer extends Creep {
 
             this.repairTarget(target);
         } else if (this.getMemory().state === 'recycling') {
-            if (Game.spawns['Spawn1'].recycleCreep(this.getCreep()) === ERR_NOT_IN_RANGE) {
-                this.moveTo(Game.spawns['Spawn1']);
-            }
+            this.death();
         }
     }
 }

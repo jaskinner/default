@@ -1,4 +1,5 @@
-var { Harvester, Truck } = require('Harvester');
+var Harvester = require('Harvester');
+var Truck = require('Truck');
 var Upgrader = require('Upgrader');
 var Builder = require('Builder');
 var Repairer = require('Repairer');

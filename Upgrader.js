@@ -39,9 +39,7 @@ module.exports = class Upgrader extends Creep {
             var controller = this.getRoom().controller;
             this.upgradeController(controller);
         } else if (this.getMemory().state === 'recycling') {
-            if (Game.spawns['Spawn1'].recycleCreep(this.getCreep()) === ERR_NOT_IN_RANGE) {
-                this.moveTo(Game.spawns['Spawn1']);
-            }
+            this.death();
         }
     }
 }
