@@ -19,7 +19,7 @@ module.exports = class Harvester extends Creep {
     }
 
     getClosestEnergySource() {
-        return this.pos().findClosestByRange(FIND_SOURCES_ACTIVE);
+        return this.pos().findClosestByPath(FIND_SOURCES_ACTIVE);
     }
 
     getType() {

@@ -36,7 +36,7 @@ module.exports = class Builder extends Creep {
         this.decideState();
 
         if (this.getMemory().state === 'harvesting') {
-            var container = this.pos().findClosestByRange(FIND_STRUCTURES, {
+            var container = this.pos().findClosestByPath(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return structure.structureType === STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
                 }

@@ -10,7 +10,7 @@ module.exports = class Truck extends Harvester {
 
     harvest() {
         var source = this.getLargestDroppedEnergy();
-        var tombstone = this.pos().findClosestByRange(FIND_TOMBSTONES);
+        var tombstone = this.pos().findClosestByPath(FIND_TOMBSTONES);
 
         if (tombstone && tombstone.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
             this.withdrawFrom(tombstone, RESOURCE_ENERGY);
