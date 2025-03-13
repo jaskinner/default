@@ -48,8 +48,6 @@ module.exports = class Builder extends Creep {
         } else if (this.getMemory().state === 'building') {
             var target = this.decideTarget();
 
-            console.log(target)
-
             if (!target) {
                 this.getCreep().drop(RESOURCE_ENERGY);
             } else {

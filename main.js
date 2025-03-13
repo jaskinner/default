@@ -22,13 +22,13 @@ module.exports.loop = function () {
         construction: Game.constructionSites
     };
 
-    if (counts.harvester < 3) {
+    if (counts.harvester < 4) {
         if (counts.harvester === 0 || counts.shovel < 2) {
-            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK], 'Harvester-Shovel' + Game.time, {
+            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK], 'Harvester-Shovel' + Game.time, {
                 memory: { role: 'harvester', type: 'shovel' }
             });
         } else {
-            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
+            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
                 memory: { role: 'harvester', type: 'truck' }
             });
         }
