@@ -15,7 +15,9 @@ module.exports = class Repairer extends Creep {
     }
 
     decideState() {
-        if (this.getMemory().state === 'harvesting' && this.creep.store.getFreeCapacity() === 0) {
+        if (this.getTicksToLive() < 50) {
+            this.getMemory().state = 'recycling';
+        } else if (this.getMemory().state === 'harvesting' && this.creep.store.getFreeCapacity() === 0) {
             this.getMemory().state = 'repairing';
         } else if (this.getMemory().state === 'repairing' && this.creep.store.getUsedCapacity() === 0) {
             this.getMemory().state = 'harvesting';

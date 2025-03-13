@@ -15,7 +15,9 @@ module.exports = class Upgrader extends Creep {
     }
 
     decideState() {
-        if (this.getMemory().state === 'harvesting' && this.creep.store.getFreeCapacity() === 0) {
+        if (this.getTicksToLive() < 50) {
+            this.getMemory().state = 'recycling';
+        } else if (this.getMemory().state === 'harvesting' && this.creep.store.getFreeCapacity() === 0) {
             this.getMemory().state = 'upgrading';
         } else if (this.getMemory().state === 'upgrading' && this.creep.store.getUsedCapacity() === 0) {
             this.getMemory().state = 'harvesting';

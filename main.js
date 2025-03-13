@@ -12,16 +12,16 @@ module.exports.loop = function () {
     for (let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];
         let newCreep;
-        if (creep.memory.role === 'harvester') {
-            if (creep.memory.type === 'truck') {
-                newCreep = new Truck(creep);
-            }
-            newCreep = new Harvester(creep);
-        } else if (creep.memory.role === 'upgrader') {
+        let creepRole = creep.memory.role;
+        let creepType = creep.memory.type;
+
+        if (creepRole === 'harvester') {
+            newCreep = creepType === 'truck' ? new Truck(creep) : new Harvester(creep);
+        } else if (creepRole === 'upgrader') {
             newCreep = new Upgrader(creep);
-        } else if (creep.memory.role === 'builder') {
+        } else if (creepRole === 'builder') {
             newCreep = new Builder(creep);
-        } else if (creep.memory.role === 'repairer') {
+        } else if (creepRole === 'repairer') {
             newCreep = new Repairer(creep);
         }
         newCreep.run();

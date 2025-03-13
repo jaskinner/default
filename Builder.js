@@ -9,7 +9,9 @@ module.exports = class Builder extends Creep {
     }
 
     decideState() {
-        if (this.getMemory().state === 'harvesting' && this.creep.store.getFreeCapacity() === 0) {
+        if (this.getTicksToLive() < 50) {
+            this.getMemory().state = 'recycling';
+        } else if (this.getMemory().state === 'harvesting' && this.creep.store.getFreeCapacity() === 0) {
             this.getMemory().state = 'building';
         } else if (this.getMemory().state === 'building' && this.creep.store.getUsedCapacity() === 0) {
             this.getMemory().state = 'harvesting';

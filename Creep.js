@@ -26,6 +26,7 @@ module.exports = class Creep {
     }
 
     death() {
+        this.say('Goodbye!');
         if (Game.spawns['Spawn1'].recycleCreep(this.getCreep()) === ERR_NOT_IN_RANGE) {
             this.moveTo(Game.spawns['Spawn1']);
         }

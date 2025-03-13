@@ -14,12 +14,26 @@ function spawnHelper() {
 
     if (counts.harvester < 2) {
         if (counts.harvester === 0 || counts.shovel < 1) {
-            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK, WORK, WORK, WORK], 'Harvester-Shovel' + Game.time, {
+            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK, WORK, WORK], 'Harvester-Shovel' + Game.time, {
                 memory: { role: 'harvester', type: 'shovel' }
             });
         } else {
-            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
+            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
                 memory: { role: 'harvester', type: 'truck' }
+            });
+        }
+    }
+
+    if (counts.harvester >= 2 && counts.upgrader >= 2) {
+        if (counts.construction.length && counts.builder < 2) {
+            creep = Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY, CARRY], 'Builder' + Game.time, {
+                memory: { role: 'builder' }
+            });
+        }
+
+        if (counts.repairer < 1 && !counts.construction.length) {
+            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], 'Repairer' + Game.time, {
+                memory: { role: 'repairer' }
             });
         }
     }
@@ -27,18 +41,6 @@ function spawnHelper() {
     if (counts.upgrader < 2 && counts.harvester >= 2) {
         creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK, CARRY, CARRY, CARRY], 'Upgrader' + Game.time, {
             memory: { role: 'upgrader' }
-        });
-    }
-
-    if (counts.construction.length && counts.harvester >= 2 && counts.upgrader >= 2 && counts.builder < 2) {
-        creep = Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY, CARRY], 'Builder' + Game.time, {
-            memory: { role: 'builder' }
-        });
-    }
-
-    if (counts.harvester >= 2 && counts.upgrader >= 2 && counts.repairer < 2 && !counts.construction.length) {
-        creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], 'Repairer' + Game.time, {
-            memory: { role: 'repairer' }
         });
     }
 }
