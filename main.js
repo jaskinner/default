@@ -1,4 +1,4 @@
-var helpers = require('helpers');
+var { memoryCleanup, spawnHelper } = require('helpers');
 var Harvester = require('Harvester');
 var Truck = require('Truck');
 var Upgrader = require('Upgrader');
@@ -6,14 +6,8 @@ var Builder = require('Builder');
 var Repairer = require('Repairer');
 
 module.exports.loop = function () {
-    for (let creepName in Memory.creeps) {
-        if (!Game.creeps[creepName]) {
-            console.log('Clearing non-existing creep memory:', creepName);
-            delete Memory.creeps[creepName];
-        }
-    }
-
-    helpers.spawnHelper();
+    memoryCleanup();
+    spawnHelper();
 
     for (let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];

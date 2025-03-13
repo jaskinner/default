@@ -1,4 +1,4 @@
-module.exports.spawnHelper = function () {
+function spawnHelper() {
     const counts = {
         creep: Object.keys(Game.creeps).length,
         harvester: _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length,
@@ -42,3 +42,17 @@ module.exports.spawnHelper = function () {
         });
     }
 }
+
+function memoryCleanup() {
+    for (let creepName in Memory.creeps) {
+        if (!Game.creeps[creepName]) {
+            console.log('Clearing non-existing creep memory:', creepName);
+            delete Memory.creeps[creepName];
+        }
+    }
+}
+
+module.exports = {
+    memoryCleanup,
+    spawnHelper
+};
