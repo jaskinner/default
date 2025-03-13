@@ -31,6 +31,8 @@ module.exports = class Harvester extends Creep {
 
         if (source) {
             this.harvestFrom(source);
+        } else {
+            this.getMemory().state = 'transfering';
         }
     }
 

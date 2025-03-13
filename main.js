@@ -25,30 +25,34 @@ module.exports.loop = function () {
 
     if (counts.harvester < 4) {
         if (counts.harvester === 0 || counts.shovel < 2) {
-            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK], 'Harvester-Shovel' + Game.time, {
+            let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK, WORK, WORK], 'Harvester-Shovel' + Game.time, {
                 memory: { role: 'harvester', type: 'shovel' }
             });
+
+            console.log('Spawning new Harvester-Shovel');
         } else {
-            Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
+            let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
                 memory: { role: 'harvester', type: 'truck' }
             });
+
+            console.log('Spawning new Harvester-Shovel');
         }
     }
 
     if (counts.upgrader < 2 && counts.harvester >= 2) {
-        Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, CARRY, CARRY], 'Upgrader' + Game.time, {
+        let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK, CARRY, CARRY, CARRY], 'Upgrader' + Game.time, {
             memory: { role: 'upgrader' }
         });
     }
 
     if (counts.construction.length && counts.harvester >= 2 && counts.upgrader >= 2 && counts.builder < 2) {
-        let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Builder' + Game.time, {
+        let creep = Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY, CARRY], 'Builder' + Game.time, {
             memory: { role: 'builder' }
         });
     }
 
-    if (counts.harvester >= 2 && counts.upgrader >= 2 && counts.repairer < 2) {
-        let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY, CARRY], 'Repairer' + Game.time, {
+    if (counts.harvester >= 2 && counts.upgrader >= 2 && counts.repairer < 2 && !counts.construction.length) {
+        let creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], 'Repairer' + Game.time, {
             memory: { role: 'repairer' }
         }); 
     }
