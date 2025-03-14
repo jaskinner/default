@@ -12,13 +12,13 @@ function spawnHelper() {
 
     let creep;
 
-    if (counts.harvester < 2) {
-        if (counts.harvester === 0 || counts.shovel < 1) {
-            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK, WORK, WORK], 'Harvester-Shovel' + Game.time, {
+    if (counts.harvester < 4) {
+        if (counts.harvester === 0 || counts.shovel < 2 && counts.truck > 0) {
+            creep = Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, MOVE], 'Harvester-Shovel' + Game.time, {
                 memory: { role: 'harvester', type: 'shovel' }
             });
         } else {
-            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
+            creep = Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, MOVE, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
                 memory: { role: 'harvester', type: 'truck' }
             });
         }
@@ -26,20 +26,20 @@ function spawnHelper() {
 
     if (counts.harvester >= 2 && counts.upgrader >= 2) {
         if (counts.construction.length && counts.builder < 2) {
-            creep = Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, MOVE, CARRY, CARRY, CARRY], 'Builder' + Game.time, {
+            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, CARRY], 'Builder' + Game.time, {
                 memory: { role: 'builder' }
             });
         }
 
         if (counts.repairer < 1 && !counts.construction.length) {
-            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY, CARRY, CARRY], 'Repairer' + Game.time, {
+            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY], 'Repairer' + Game.time, {
                 memory: { role: 'repairer' }
             });
         }
     }
 
     if (counts.upgrader < 2 && counts.harvester >= 2) {
-        creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK, CARRY, CARRY, CARRY], 'Upgrader' + Game.time, {
+        creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY], 'Upgrader' + Game.time, {
             memory: { role: 'upgrader' }
         });
     }

@@ -8,16 +8,6 @@ module.exports = class Harvester extends Creep {
         }
     }
 
-    getLargestDroppedEnergy() {
-        return this.getRoom().find(FIND_DROPPED_RESOURCES, {
-            filter: (resource) => {
-                return resource.resourceType === RESOURCE_ENERGY;
-            }
-        }).sort((a, b) => {
-            return b.amount - a.amount;
-        })[0];
-    }
-
     getClosestEnergySource() {
         return this.pos().findClosestByPath(FIND_SOURCES_ACTIVE);
     }

@@ -34,6 +34,10 @@ module.exports = class Truck extends Harvester {
 
         if (targets.length > 0) {
             this.transferTo(targets[0], RESOURCE_ENERGY);
+            // } else {
+            //     let friend = this.pos().findClosestByPath(FIND_CREEPS);
+            //     console.log("transferring to " + friend.name)
+            //     this.transferTo(friend, RESOURCE_ENERGY)
         }
     }
 }
