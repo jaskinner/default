@@ -8,12 +8,24 @@ module.exports = class Harvester extends Creep {
         }
     }
 
+    getLargestSource() {
+        return this.getRoom().find(FIND_SOURCES_ACTIVE).sort((a, b) => {
+            return b.energy - a.energy;
+        })[0];
+    }
+
     getClosestEnergySource() {
-        return this.pos().findClosestByPath(FIND_SOURCES_ACTIVE);
+        return this.pos().findClosestByPath(FIND_SOURCES_ACTIVE, {range: 1, ignoreCreeps: true});
     }
 
     getType() {
         return this.getMemory().type;
+    }
+
+    harvestFrom(target) {
+        if (this.getCreep().harvest(target) == ERR_NOT_IN_RANGE) {
+            this.moveTo(target);
+        }
     }
 
     harvest() {

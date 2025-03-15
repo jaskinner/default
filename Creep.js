@@ -7,16 +7,6 @@ module.exports = class Creep {
         return this.creep;
     }
 
-    getLargestDroppedEnergy() {
-        return this.getRoom().find(FIND_DROPPED_RESOURCES, {
-            filter: (resource) => {
-                return resource.resourceType === RESOURCE_ENERGY;
-            }
-        }).sort((a, b) => {
-            return b.amount - a.amount;
-        })[0];
-    }
-
     getMemory() {
         return this.creep.memory;
     }
@@ -30,23 +20,14 @@ module.exports = class Creep {
     }
 
     build(target) {
-        // this.say(target.id)
         if (this.getCreep().build(target) == ERR_NOT_IN_RANGE) {
             this.moveTo(target);
         }
     }
 
     death() {
-        // this.say('Goodbye!');
         if (Game.spawns['Spawn1'].recycleCreep(this.getCreep()) === ERR_NOT_IN_RANGE) {
             this.moveTo(Game.spawns['Spawn1']);
-        }
-    }
-
-    harvestFrom(target) {
-        // this.say(target.id)
-        if (this.getCreep().harvest(target) == ERR_NOT_IN_RANGE) {
-            this.moveTo(target);
         }
     }
 
@@ -55,7 +36,6 @@ module.exports = class Creep {
     }
 
     pickup(target) {
-        // this.say(target.id)
         if (this.getCreep().pickup(target) == ERR_NOT_IN_RANGE) {
             this.moveTo(target);
         }

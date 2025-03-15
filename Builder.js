@@ -46,9 +46,6 @@ module.exports = class Builder extends Creep {
 
             if (container) {
                 this.withdrawFrom(container, RESOURCE_ENERGY);
-                // } else {
-                //     let source = this.getLargestDroppedEnergy()
-                //     this.pickup(source)
             } else {
                 this.moveTo(Game.spawns.Spawn1)
             }

@@ -33,7 +33,7 @@ module.exports = class Repairer extends Creep {
                     return structure.structureType === STRUCTURE_CONTAINER && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
                 }
             });
-
+            
             if (container) {
                 this.withdrawFrom(container, RESOURCE_ENERGY);
             } else {
@@ -45,7 +45,7 @@ module.exports = class Repairer extends Creep {
                     return structure.hits < structure.hitsMax;
                 }
             });
-
+            
             if (!target) {
                 this.moveTo(Game.spawns.Spawn1)
             } else {
