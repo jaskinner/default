@@ -1,4 +1,4 @@
-var { memoryCleanup, spawnHelper, init } = require('helpers');
+var { memoryCleanup, spawnHelper } = require('helpers');
 var Harvester = require('Harvester');
 var Truck = require('Truck');
 var Upgrader = require('Upgrader');
@@ -6,7 +6,6 @@ var Builder = require('Builder');
 var Repairer = require('Repairer');
 
 module.exports.loop = function () {
-    init();
     memoryCleanup();
     spawnHelper();
 
