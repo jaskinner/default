@@ -10,41 +10,37 @@ function spawnHelper() {
         construction: _.filter(Game.constructionSites, (site) => site.my)
     };
 
+    const bodyParts = {
+        default: [MOVE, WORK, CARRY],
+        harvester: {
+            shovel: [MOVE, WORK],
+            truck: [MOVE, CARRY]
+        },
+    };
+
+    function createCreep(body, role, type) {
+        const creep = Game.spawns['Spawn1'].spawnCreep(body, role + Game.time, {
+            memory: { role, type }
+        });
+        
+        return creep;
+    }
+
     let creep;
 
     if (counts.harvester < 4) {
         if (counts.harvester === 0 || counts.shovel < 2 && counts.truck > 0) {
-            creep = Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, WORK, MOVE], 'Harvester-Shovel' + Game.time, {
-                memory: { role: 'harvester', type: 'shovel' }
-            });
-
+            creep = createCreep(bodyParts.harvester.shovel, 'harvester', 'shovel');
             console.log('Harvester-Shovel: ' + creep);
         } else {
-            creep = Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
-                memory: { role: 'harvester', type: 'truck' }
-            });
-
+            creep = createCreep(bodyParts.harvester.truck, 'harvester', 'truck');
             console.log('Harvester-Truck: ' + creep);
-        }
-
-        if (creep === -6 && (counts.harvester === 0 || counts.creep < 2)) {
-            if (counts.truck === 0) {
-                creep = Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, CARRY], 'Harvester-Truck-E' + Game.time, {
-                    memory: { role: 'harvester', type: 'truck' }
-                })
-            } else {
-                creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE], 'Harvester-Shovel-E' + Game.time, {
-                    memory: { role: 'harvester', type: 'shovel' }
-                });
-            }
-
-            console.log('Harvester-Truck-E: ' + creep);
         }
     }
 
     if (counts.harvester >= 2 && counts.upgrader >= 2) {
         if (counts.construction.length && counts.builder < 2) {
-            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK, CARRY, CARRY], 'Builder' + Game.time, {
+            creep = Game.spawns['Spawn1'].spawnCreep(bodyParts.default, 'Builder' + Game.time, {
                 memory: { role: 'builder' }
             });
 
@@ -52,7 +48,7 @@ function spawnHelper() {
         }
 
         if (counts.repairer < 1 && !counts.construction.length) {
-            creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, MOVE], 'Repairer' + Game.time, {
+            creep = Game.spawns['Spawn1'].spawnCreep(bodyParts.default, 'Repairer' + Game.time, {
                 memory: { role: 'repairer' }
             });
 
@@ -61,7 +57,7 @@ function spawnHelper() {
     }
 
     if (counts.upgrader < 3 && counts.harvester >= 2) {
-        creep = Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, CARRY, MOVE, CARRY, CARRY, CARRY, CARRY], 'Upgrader' + Game.time, {
+        creep = Game.spawns['Spawn1'].spawnCreep(bodyParts.default, 'Upgrader' + Game.time, {
             memory: { role: 'upgrader' }
         });
 
@@ -81,5 +77,4 @@ function memoryCleanup() {
 module.exports = {
     memoryCleanup,
     spawnHelper,
-    init
 };
