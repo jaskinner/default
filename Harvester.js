@@ -8,6 +8,22 @@ module.exports = class Harvester extends Creep {
         }
     }
 
+    setPFocus(target) {
+        this.getMemory().pfocus = target.id;
+    }
+
+    getPFocus() {
+        return this.getMemory().pfocus;
+    }
+
+    setTFocus(target) {
+        this.getMemory().tfocus = target.id;
+    }
+
+    getTFocus() {
+        return this.getMemory().tfocus;
+    }
+
     getLargestSource() {
         return this.getRoom().find(FIND_SOURCES_ACTIVE).sort((a, b) => {
             return b.energy - a.energy;
@@ -15,7 +31,7 @@ module.exports = class Harvester extends Creep {
     }
 
     getClosestEnergySource() {
-        return this.pos().findClosestByPath(FIND_SOURCES_ACTIVE, {range: 1, ignoreCreeps: true});
+        return this.pos().findClosestByPath(FIND_SOURCES_ACTIVE, { range: 1, ignoreCreeps: true });
     }
 
     getType() {
@@ -29,9 +45,14 @@ module.exports = class Harvester extends Creep {
     }
 
     harvest() {
-        var source = this.getClosestEnergySource();
+        let source = this.getLargestSource();
+
+        if (this.getPFocus() && Game.getObjectById(this.getPFocus())) {
+            source = Game.getObjectById(this.getPFocus()).energy ? Game.getObjectById(this.getPFocus()) : this.getLargestSource();
+        }
 
         if (source) {
+            this.setPFocus(source);
             this.harvestFrom(source);
         } else {
             this.getMemory().state = 'transfering';
