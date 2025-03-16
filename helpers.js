@@ -17,16 +17,28 @@ function spawnHelper() {
             creep = Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, WORK, MOVE], 'Harvester-Shovel' + Game.time, {
                 memory: { role: 'harvester', type: 'shovel' }
             });
+
+            console.log('Harvester-Shovel: ' + creep);
         } else {
             creep = Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, MOVE, MOVE, MOVE, CARRY, CARRY, CARRY, CARRY], 'Harvester-Truck' + Game.time, {
                 memory: { role: 'harvester', type: 'truck' }
             });
+
+            console.log('Harvester-Truck: ' + creep);
         }
 
-        if (creep === -6 && counts.truck === 0) {
-            creep = Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, CARRY, CARRY], 'Harvester-Truck-E' + Game.time, {
-                memory: { role: 'harvester', type: 'truck' }
-            });
+        if (creep === -6 && (counts.harvester === 0 || counts.creep < 2)) {
+            if (counts.truck === 0) {
+                creep = Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, CARRY], 'Harvester-Truck-E' + Game.time, {
+                    memory: { role: 'harvester', type: 'truck' }
+                })
+            } else {
+                creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE], 'Harvester-Shovel-E' + Game.time, {
+                    memory: { role: 'harvester', type: 'shovel' }
+                });
+            }
+
+            console.log('Harvester-Truck-E: ' + creep);
         }
     }
 
@@ -35,12 +47,16 @@ function spawnHelper() {
             creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, WORK, WORK, CARRY, CARRY], 'Builder' + Game.time, {
                 memory: { role: 'builder' }
             });
+
+            console.log('Builder: ' + creep);
         }
 
         if (counts.repairer < 1 && !counts.construction.length) {
             creep = Game.spawns['Spawn1'].spawnCreep([WORK, MOVE, CARRY, CARRY, MOVE], 'Repairer' + Game.time, {
                 memory: { role: 'repairer' }
             });
+
+            console.log('Repairer: ' + creep);
         }
     }
 
@@ -48,6 +64,8 @@ function spawnHelper() {
         creep = Game.spawns['Spawn1'].spawnCreep([WORK, WORK, WORK, WORK, CARRY, MOVE, CARRY, CARRY, CARRY, CARRY], 'Upgrader' + Game.time, {
             memory: { role: 'upgrader' }
         });
+
+        console.log('Upgrader: ' + creep);
     }
 }
 
@@ -58,10 +76,14 @@ function memoryCleanup() {
             delete Memory.creeps[creepName];
         }
     }
+}
 
+function init() {
+    // 
 }
 
 module.exports = {
     memoryCleanup,
-    spawnHelper
+    spawnHelper,
+    init
 };
