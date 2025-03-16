@@ -22,6 +22,8 @@ function spawnHelper() {
         const creep = Game.spawns['Spawn1'].spawnCreep(body, role + Game.time, {
             memory: { role, type }
         });
+
+        console.log('Creep: ' + creep);
         
         return creep;
     }
@@ -31,37 +33,23 @@ function spawnHelper() {
     if (counts.harvester < 4) {
         if (counts.harvester === 0 || counts.shovel < 2 && counts.truck > 0) {
             creep = createCreep(bodyParts.harvester.shovel, 'harvester', 'shovel');
-            console.log('Harvester-Shovel: ' + creep);
         } else {
             creep = createCreep(bodyParts.harvester.truck, 'harvester', 'truck');
-            console.log('Harvester-Truck: ' + creep);
         }
     }
 
     if (counts.harvester >= 2 && counts.upgrader >= 2) {
         if (counts.construction.length && counts.builder < 2) {
-            creep = Game.spawns['Spawn1'].spawnCreep(bodyParts.default, 'Builder' + Game.time, {
-                memory: { role: 'builder' }
-            });
-
-            console.log('Builder: ' + creep);
+            creep = createCreep(bodyParts.default, 'builder');
         }
 
         if (counts.repairer < 1 && !counts.construction.length) {
-            creep = Game.spawns['Spawn1'].spawnCreep(bodyParts.default, 'Repairer' + Game.time, {
-                memory: { role: 'repairer' }
-            });
-
-            console.log('Repairer: ' + creep);
+            creep = createCreep(bodyParts.default, 'repairer');
         }
     }
 
     if (counts.upgrader < 3 && counts.harvester >= 2) {
-        creep = Game.spawns['Spawn1'].spawnCreep(bodyParts.default, 'Upgrader' + Game.time, {
-            memory: { role: 'upgrader' }
-        });
-
-        console.log('Upgrader: ' + creep);
+        creep = createCreep(bodyParts.default, 'upgrader');
     }
 }
 
