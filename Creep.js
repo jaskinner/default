@@ -50,14 +50,12 @@ module.exports = class Creep {
     }
 
     transferTo(target, resourceType, amount) {
-        // this.say(target.id)
         if (this.getCreep().transfer(target, resourceType) == ERR_NOT_IN_RANGE) {
             this.moveTo(target);
         }
     }
 
     withdrawFrom(target, resourceType, amount) {
-        // this.say(target.id)
         if (this.getCreep().withdraw(target, resourceType) == ERR_NOT_IN_RANGE) {
             this.moveTo(target);
         }

@@ -8,6 +8,22 @@ module.exports = class Harvester extends Creep {
         }
     }
 
+    setPFocus(target) {
+        this.getMemory().pfocus = target.id;
+    }
+
+    getPFocus() {
+        return Game.getObjectById(this.getMemory().pfocus);
+    }
+
+    setTFocus(target) {
+        this.getMemory().tfocus = target.id;
+    }
+
+    getTFocus() {
+        return Game.getObjectById(this.getMemory().tfocus);
+    }
+
     getLargestSource() {
         return this.getRoom().find(FIND_SOURCES_ACTIVE).sort((a, b) => {
             return b.energy - a.energy;
@@ -29,7 +45,7 @@ module.exports = class Harvester extends Creep {
     }
 
     harvest() {
-        var source = this.getClosestEnergySource();
+        var source = this.getLargestSource();
 
         if (source) {
             this.harvestFrom(source);
