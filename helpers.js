@@ -24,8 +24,6 @@ function spawnHelper() {
         const creep = Game.spawns['Spawn1'].spawnCreep(body, role + Game.time, {
             memory: { role, type }
         });
-
-        console.log(`Spawning new ${role}: ${creep}`);
         
         return creep;
     }

@@ -45,7 +45,14 @@ module.exports = class Harvester extends Creep {
     }
 
     harvest() {
-        var source = this.getLargestSource();
+        let source;
+        
+        if (this.getPFocus()) {
+            source = this.getPFocus();
+        } else {
+            source = this.getLargestSource();
+            this.setPFocus(source.id);
+        }
 
         if (source) {
             this.harvestFrom(source);
