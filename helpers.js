@@ -1,4 +1,6 @@
 function spawnHelper() {
+    let creep;
+    
     const counts = {
         creep: Object.keys(Game.creeps).length,
         harvester: _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length,
@@ -23,12 +25,10 @@ function spawnHelper() {
             memory: { role, type }
         });
 
-        console.log('Creep: ' + creep);
+        console.log(`Spawning new ${role}: ${creep}`);
         
         return creep;
     }
-
-    let creep;
 
     if (counts.harvester < 4) {
         if (counts.harvester === 0 || counts.shovel < 2 && counts.truck > 0) {
