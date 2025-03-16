@@ -6,7 +6,6 @@ var Builder = require('Builder');
 var Repairer = require('Repairer');
 
 module.exports.loop = function () {
-    init();
     memoryCleanup();
     spawnHelper();
 

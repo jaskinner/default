@@ -78,10 +78,6 @@ function memoryCleanup() {
     }
 }
 
-function init() {
-    // 
-}
-
 module.exports = {
     memoryCleanup,
     spawnHelper,
