@@ -39,23 +39,25 @@ function spawnHelper() {
         } else {
             creep = createCreep(bodyParts.harvester.truck, 'harvester', 'truck');
         }
-    }
-
-    if (counts.harvester >= 2 && counts.upgrader >= 2) {
+        
+        if (!counts.containers && counts.builder < 1) {
+            creep = createCreep(bodyParts.default, 'builder', 'init');
+        }
+    } else if (counts.harvester >= 2 && counts.upgrader >= 2) {
         if (counts.construction.length && counts.builder < 2) {
             creep = createCreep(bodyParts.default, 'builder');
-        } else if (!counts.containers && counts.builder < 1) {
-            creep = createCreep(bodyParts.default, 'builder', 'init');
         }
 
         if (counts.repairer < 1 && !counts.construction.length) {
             creep = createCreep(bodyParts.default, 'repairer');
         }
+
+        if (counts.upgrader < 3) {
+            creep = createCreep(bodyParts.default, 'upgrader');
+        }
     }
 
-    if (counts.upgrader < 3 && counts.harvester >= 2) {
-        creep = createCreep(bodyParts.default, 'upgrader');
-    }
+    return counts;
 }
 
 function memoryCleanup() {

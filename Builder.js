@@ -38,15 +38,12 @@ module.exports = class Builder extends Creep {
         this.decideState();
 
         if (this.getMemory().type === 'init') {
-            // find path to room controller from current position witin 4 tiles
             var path = this.pos().findPathTo(this.getRoom().controller, { range: 4 });
 
-            // if path is found, move to room controller
             if (path.length) {
                 this.moveTo(this.getRoom().controller);
             }
 
-            // if creep is within 4 tile of controller, create container
             if (path.length <= 4) {
                 this.getRoom().createConstructionSite(this.pos(), STRUCTURE_CONTAINER);
                 this.getMemory().type = 'hybrid';

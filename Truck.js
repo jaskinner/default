@@ -55,13 +55,11 @@ module.exports = class Truck extends Harvester {
             });
         }
 
-        // transfer to nearest hybrid builder if there is one
         var builders = this.getRoom().find(FIND_MY_CREEPS, {
             filter: (creep) => {
                 return creep.memory.role === 'builder' && creep.memory.type === 'hybrid';
             }
-        }
-        ).sort((a, b) => {
+        }).sort((a, b) => {
             return this.pos().getRangeTo(a) - this.pos().getRangeTo(b);
         });
 
