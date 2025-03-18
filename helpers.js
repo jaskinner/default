@@ -20,8 +20,8 @@ function spawnHelper() {
     const bodyParts = {
         default: [MOVE, WORK, CARRY],
         harvester: {
-            shovel: [MOVE, WORK],
-            truck: [MOVE, CARRY]
+            shovel: [MOVE, WORK, WORK],
+            truck: [MOVE, MOVE, CARRY, CARRY]
         },
     };
 
@@ -32,7 +32,7 @@ function spawnHelper() {
         
         return creep;
     }
-
+    
     if (counts.harvester < 4) {
         if (counts.harvester === 0 || counts.shovel < 2 && counts.truck > 0) {
             creep = createCreep(bodyParts.harvester.shovel, 'harvester', 'shovel');
@@ -40,7 +40,7 @@ function spawnHelper() {
             creep = createCreep(bodyParts.harvester.truck, 'harvester', 'truck');
         }
         
-        if (!counts.containers) {
+        if (!counts.containers && counts.builder < 1) {
             creep = createCreep(bodyParts.default, 'builder', 'init');
         }
     } else if (counts.harvester >= 2 && counts.upgrader >= 2) {
