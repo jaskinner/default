@@ -64,7 +64,7 @@ module.exports = class Truck extends Harvester {
         });
 
         if (builders.length > 0) {
-            targets.push(builders[0]);
+            targets.unshift(builders[0]);
         }
 
         if (this.getTFocus() && Game.getObjectById(this.getTFocus()) && Game.getObjectById(this.getTFocus()).store.getFreeCapacity(RESOURCE_ENERGY) > 0) {

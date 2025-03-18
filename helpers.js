@@ -40,7 +40,7 @@ function spawnHelper() {
             creep = createCreep(bodyParts.harvester.truck, 'harvester', 'truck');
         }
         
-        if (!counts.containers && counts.builder < 1) {
+        if (!counts.containers) {
             creep = createCreep(bodyParts.default, 'builder', 'init');
         }
     } else if (counts.harvester >= 2 && counts.upgrader >= 2) {
