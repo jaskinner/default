@@ -37,7 +37,18 @@ module.exports = class Builder extends Creep {
     run() {
         this.decideState();
 
-        if (this.getMemory().state === 'harvesting') {
+        if (this.getMemory().type === 'init') {
+            var path = this.pos().findPathTo(this.getRoom().controller, { range: 4 });
+
+            if (path.length) {
+                this.moveTo(this.getRoom().controller);
+            }
+
+            if (path.length <= 4) {
+                this.getRoom().createConstructionSite(this.pos(), STRUCTURE_CONTAINER);
+                this.getMemory().type = 'hybrid';
+            }
+        } else if (this.getMemory().state === 'harvesting') {
             var container = this.pos().findClosestByPath(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return (structure.structureType === STRUCTURE_CONTAINER) && structure.store.getUsedCapacity(RESOURCE_ENERGY) > 0;
@@ -47,7 +58,9 @@ module.exports = class Builder extends Creep {
             if (container) {
                 this.withdrawFrom(container, RESOURCE_ENERGY);
             } else {
-                this.moveTo(Game.spawns.Spawn1)
+                if (!this.getMemory().type === 'hybrid') {
+                    this.moveTo(Game.spawns.Spawn1)
+                }
             }
         } else if (this.getMemory().state === 'building') {
             var target = this.decideTarget();

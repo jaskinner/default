@@ -9,7 +9,12 @@ function spawnHelper() {
         truck: _.filter(Game.creeps, (creep) => creep.memory.type === 'truck').length,
         shovel: _.filter(Game.creeps, (creep) => creep.memory.type === 'shovel').length,
         repairer: _.filter(Game.creeps, (creep) => creep.memory.role === 'repairer').length,
-        construction: _.filter(Game.constructionSites, (site) => site.my)
+        construction: _.filter(Game.constructionSites, (site) => site.my),
+        containers: Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {
+            filter: (structure) => {
+                return structure.structureType === STRUCTURE_CONTAINER;
+            }
+        }).length,
     };
 
     const bodyParts = {
@@ -34,9 +39,11 @@ function spawnHelper() {
         } else {
             creep = createCreep(bodyParts.harvester.truck, 'harvester', 'truck');
         }
-    }
-
-    if (counts.harvester >= 2 && counts.upgrader >= 2) {
+        
+        if (!counts.containers) {
+            creep = createCreep(bodyParts.default, 'builder', 'init');
+        }
+    } else if (counts.harvester >= 2 && counts.upgrader >= 2) {
         if (counts.construction.length && counts.builder < 2) {
             creep = createCreep(bodyParts.default, 'builder');
         }
@@ -44,11 +51,13 @@ function spawnHelper() {
         if (counts.repairer < 1 && !counts.construction.length) {
             creep = createCreep(bodyParts.default, 'repairer');
         }
+
+        if (counts.upgrader < 3) {
+            creep = createCreep(bodyParts.default, 'upgrader');
+        }
     }
 
-    if (counts.upgrader < 3 && counts.harvester >= 2) {
-        creep = createCreep(bodyParts.default, 'upgrader');
-    }
+    return counts;
 }
 
 function memoryCleanup() {

@@ -6,8 +6,8 @@ var Builder = require('Builder');
 var Repairer = require('Repairer');
 
 module.exports.loop = function () {
+    var counts = spawnHelper();
     memoryCleanup();
-    spawnHelper();
 
     for (let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];
