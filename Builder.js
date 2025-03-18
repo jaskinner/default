@@ -38,15 +38,17 @@ module.exports = class Builder extends Creep {
         this.decideState();
 
         if (this.getMemory().type === 'init') {
-            var path = this.pos().findPathTo(this.getRoom().controller, { range: 4 });
+            var path = this.pos().findPathTo(this.getRoom().controller, { range: 2 });
 
             if (path.length) {
-                this.moveTo(this.getRoom().controller);
-            }
-
-            if (path.length <= 4) {
-                this.getRoom().createConstructionSite(this.pos(), STRUCTURE_CONTAINER);
-                this.getMemory().type = 'hybrid';
+                if (path.length > 2) {
+                    this.getCreep().move(path[0].direction);
+                } else {
+                    this.getRoom().createConstructionSite(this.pos(), STRUCTURE_CONTAINER);
+                    this.getMemory().type = 'hybrid';
+                }
+            } else {
+                console.log('No path to controller');
             }
         } else if (this.getMemory().state === 'harvesting') {
             var container = this.pos().findClosestByPath(FIND_STRUCTURES, {

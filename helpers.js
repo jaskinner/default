@@ -32,16 +32,16 @@ function spawnHelper() {
         
         return creep;
     }
-        
-    if (!counts.containers) {
-        creep = createCreep(bodyParts.default, 'builder', 'init');
-    }
-
+    
     if (counts.harvester < 4) {
         if (counts.harvester === 0 || counts.shovel < 2 && counts.truck > 0) {
             creep = createCreep(bodyParts.harvester.shovel, 'harvester', 'shovel');
         } else {
             creep = createCreep(bodyParts.harvester.truck, 'harvester', 'truck');
+        }
+        
+        if (!counts.containers && counts.builder < 1) {
+            creep = createCreep(bodyParts.default, 'builder', 'init');
         }
     } else if (counts.harvester >= 2 && counts.upgrader >= 2) {
         if (counts.construction.length && counts.builder < 2) {
