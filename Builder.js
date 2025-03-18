@@ -58,7 +58,9 @@ module.exports = class Builder extends Creep {
             if (container) {
                 this.withdrawFrom(container, RESOURCE_ENERGY);
             } else {
-                this.moveTo(Game.spawns.Spawn1)
+                if (!this.getMemory().type === 'hybrid') {
+                    this.moveTo(Game.spawns.Spawn1)
+                }
             }
         } else if (this.getMemory().state === 'building') {
             var target = this.decideTarget();
