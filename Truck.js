@@ -21,6 +21,7 @@ module.exports = class Truck extends Harvester {
     harvest() {
         var source = this.getClosestEnergySource();
         var tombstone = this.pos().findClosestByPath(FIND_TOMBSTONES);
+        var ruin = this.pos().findClosestByPath(FIND_RUINS);
 
         if (this.getPFocus() && Game.getObjectById(this.getPFocus())) {
             source = Game.getObjectById(this.getPFocus()).amount ? Game.getObjectById(this.getPFocus()) : this.getLargestDroppedEnergy()
@@ -28,6 +29,8 @@ module.exports = class Truck extends Harvester {
 
         if (tombstone && tombstone.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
             this.withdrawFrom(tombstone, RESOURCE_ENERGY);
+        } else if (ruin && ruin.store.getUsedCapacity(RESOURCE_ENERGY) > 0) {
+            this.withdrawFrom(ruin, RESOURCE_ENERGY);
         } else if (source) {
             this.setPFocus(source)
             this.pickup(source);

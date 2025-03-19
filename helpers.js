@@ -51,10 +51,8 @@ function spawnHelper() {
         if (counts.repairer < 1 && !counts.construction.length) {
             creep = createCreep(bodyParts.default, 'repairer');
         }
-
-        if (counts.upgrader < 3) {
+    } else if (counts.upgrader < 3) {
             creep = createCreep(bodyParts.default, 'upgrader');
-        }
     }
 
     return counts;
