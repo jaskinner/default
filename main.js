@@ -1,4 +1,4 @@
-var { memoryCleanup, spawnHelper, getCounts } = require('helpers');
+var spawnHelper = require('helpers');
 var Harvester = require('Harvester');
 var Truck = require('Truck');
 var Upgrader = require('Upgrader');
@@ -7,8 +7,6 @@ var Repairer = require('Repairer');
 
 module.exports.loop = function () {
     spawnHelper();
-    memoryCleanup();
-    getCounts();
 
     for (let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];

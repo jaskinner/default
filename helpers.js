@@ -6,7 +6,6 @@ const initCreep = _.filter(Game.creeps, (creep) => creep.memory.type === 'init')
 
 const counts = {};
 
-// recalculate dynamic counts data each tick
 function getCounts() {
     counts.creep = Object.keys(Game.creeps).length;
     counts.harvester = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length;
@@ -31,17 +30,33 @@ const bodyParts = {
     },
 };
 
+function memoryCleanup() {
+    for (let creepName in Memory.creeps) {
+        if (!Game.creeps[creepName]) {
+            try {
+                delete Memory.creeps[creepName];
+            } catch (e) {
+                console.log('Error cleaning up memory:', creepName, e);
+            }
+        }
+    }
+}
+
 function createCreep(body, role, type) {
     try {
         return spawn.spawnCreep(body, role + Game.time, {
             memory: { role, type }
         });
     } catch (e) {
+        console.log('Error spawning creep:', role, e);
         return null;
     }
 }
 
-function spawnHelper() {
+module.exports = function spawnHelper() {
+    memoryCleanup();
+    getCounts();
+
     if (counts.harvester < 4) {
         if (counts.harvester === 0 || counts.shovel < 2 && counts.truck > 0) {
             creep = createCreep(bodyParts.harvester.shovel, 'harvester', 'shovel');
@@ -64,23 +79,5 @@ function spawnHelper() {
         creep = createCreep(bodyParts.default, 'upgrader');
     }
 
-    return counts;
+    return creep;
 }
-
-function memoryCleanup() {
-    for (let creepName in Memory.creeps) {
-        if (!Game.creeps[creepName]) {
-            try {
-                delete Memory.creeps[creepName];
-            } catch (e) {
-                console.log('Error cleaning up memory:', creepName, e);
-            }
-        }
-    }
-}
-
-module.exports = {
-    memoryCleanup,
-    spawnHelper,
-    getCounts,
-};
