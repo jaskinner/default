@@ -26,7 +26,7 @@ module.exports = class Creep {
     }
 
     death() {
-        this.getCreep.suicide();
+        this.getCreep().suicide();
     }
 
     moveTo(target) {
