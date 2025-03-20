@@ -1,22 +1,27 @@
 let spawn = Game.spawns['Spawn1'];
+
 let creep;
+
 const initCreep = _.filter(Game.creeps, (creep) => creep.memory.type === 'init');
 
-const counts = {
-    creep: Object.keys(Game.creeps).length,
-    harvester: _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length,
-    upgrader: _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader').length,
-    builder: _.filter(Game.creeps, (creep) => creep.memory.role === 'builder').length,
-    truck: _.filter(Game.creeps, (creep) => creep.memory.type === 'truck').length,
-    shovel: _.filter(Game.creeps, (creep) => creep.memory.type === 'shovel').length,
-    repairer: _.filter(Game.creeps, (creep) => creep.memory.role === 'repairer').length,
-    construction: _.filter(Game.constructionSites, (site) => site.my),
-    containers: spawn.room.find(FIND_STRUCTURES, {
+const counts = {};
+
+// recalculate dynamic counts data each tick
+function getCounts() {
+    counts.creep = Object.keys(Game.creeps).length;
+    counts.harvester = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length;
+    counts.upgrader = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader').length;
+    counts.builder = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder').length;
+    counts.truck = _.filter(Game.creeps, (creep) => creep.memory.type === 'truck').length;
+    counts.shovel = _.filter(Game.creeps, (creep) => creep.memory.type === 'shovel').length;
+    counts.repairer = _.filter(Game.creeps, (creep) => creep.memory.role === 'repairer').length;
+    counts.construction = _.filter(Game.constructionSites, (site) => site.my);
+    counts.containers = spawn.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
             return structure.structureType === STRUCTURE_CONTAINER;
         }
-    }).length,
-};
+    }).length;
+}
 
 const bodyParts = {
     default: [MOVE, WORK, CARRY],
@@ -27,11 +32,13 @@ const bodyParts = {
 };
 
 function createCreep(body, role, type) {
-    const creep = spawn.spawnCreep(body, role + Game.time, {
-        memory: { role, type }
-    });
-
-    return creep;
+    try {
+        return spawn.spawnCreep(body, role + Game.time, {
+            memory: { role, type }
+        });
+    } catch (e) {
+        return null;
+    }
 }
 
 function spawnHelper() {
@@ -63,8 +70,11 @@ function spawnHelper() {
 function memoryCleanup() {
     for (let creepName in Memory.creeps) {
         if (!Game.creeps[creepName]) {
-            console.log('Clearing non-existing creep memory:', creepName);
-            delete Memory.creeps[creepName];
+            try {
+                delete Memory.creeps[creepName];
+            } catch (e) {
+                console.log('Error cleaning up memory:', creepName, e);
+            }
         }
     }
 }
@@ -72,4 +82,5 @@ function memoryCleanup() {
 module.exports = {
     memoryCleanup,
     spawnHelper,
+    getCounts,
 };

@@ -1,4 +1,4 @@
-var { memoryCleanup, spawnHelper } = require('helpers');
+var { memoryCleanup, spawnHelper, getCounts } = require('helpers');
 var Harvester = require('Harvester');
 var Truck = require('Truck');
 var Upgrader = require('Upgrader');
@@ -6,8 +6,9 @@ var Builder = require('Builder');
 var Repairer = require('Repairer');
 
 module.exports.loop = function () {
-    var counts = spawnHelper();
+    spawnHelper();
     memoryCleanup();
+    getCounts();
 
     for (let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];
@@ -24,6 +25,11 @@ module.exports.loop = function () {
         } else if (creepRole === 'repairer') {
             newCreep = new Repairer(creep);
         }
-        newCreep.run();
+
+        try {
+            newCreep.run();
+        } catch (e) {
+            console.log('Error running creep:', creepName, e);
+        }
     }
 }
