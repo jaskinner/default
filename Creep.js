@@ -26,9 +26,7 @@ module.exports = class Creep {
     }
 
     death() {
-        if (Game.spawns['Spawn1'].recycleCreep(this.getCreep()) === ERR_NOT_IN_RANGE) {
-            this.moveTo(Game.spawns['Spawn1']);
-        }
+        this.getCreep.suicide();
     }
 
     moveTo(target) {

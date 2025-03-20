@@ -10,11 +10,7 @@ function spawnHelper() {
         shovel: _.filter(Game.creeps, (creep) => creep.memory.type === 'shovel').length,
         repairer: _.filter(Game.creeps, (creep) => creep.memory.role === 'repairer').length,
         construction: _.filter(Game.constructionSites, (site) => site.my),
-        containers: Game.spawns['Spawn1'].room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return structure.structureType === STRUCTURE_CONTAINER;
-            }
-        }).length,
+        containers: _.filter(Game.structures, (structure) => structure.structureType === STRUCTURE_CONTAINER).length,
     };
 
     const bodyParts = {
