@@ -1,56 +1,65 @@
+const spawn = null || Game.spawns.Spawn1;
+
 function getCounts() {
-    const counts = {};
-    counts.creep = Object.keys(Game.creeps).length;
-    counts.harvester = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length;
-    counts.upgrader = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader').length;
-    counts.builder = _.filter(Game.creeps, (creep) => creep.memory.role === 'builder').length;
-    counts.truck = _.filter(Game.creeps, (creep) => creep.memory.type === 'truck').length;
-    counts.shovel = _.filter(Game.creeps, (creep) => creep.memory.type === 'shovel').length;
-    counts.repairer = _.filter(Game.creeps, (creep) => creep.memory.role === 'repairer').length;
-    counts.construction = _.filter(Game.constructionSites, (site) => site.my);
-    counts.containers = spawn.room.find(FIND_STRUCTURES, {
+    const containers = spawn && spawn.room ? spawn.room.find(FIND_STRUCTURES, {
         filter: (structure) => {
             return structure.structureType === STRUCTURE_CONTAINER;
         }
-    }).length;
+    }) : [];
+
+    return {
+        creep: Object.keys(Game.creeps).length,
+        harvester: _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length,
+        upgrader: _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader').length,
+        builder: _.filter(Game.creeps, (creep) => creep.memory.role === 'builder').length,
+        truck: _.filter(Game.creeps, (creep) => creep.memory.type === 'truck').length,
+        shovel: _.filter(Game.creeps, (creep) => creep.memory.type === 'shovel').length,
+        repairer: _.filter(Game.creeps, (creep) => creep.memory.role === 'repairer').length,
+        construction: _.filter(Game.constructionSites, (site) => site.my),
+        containers: containers.length
+    };
 }
 
 function memoryCleanup() {
     for (let creepName in Memory.creeps) {
         if (!Game.creeps[creepName]) {
-            try {
-                delete Memory.creeps[creepName];
-            } catch (e) {
-                console.log('Error cleaning up memory:', creepName, e);
-            }
+            delete Memory.creeps[creepName];
         }
     }
 }
 
 function createCreep(body, role, type) {
-    try {
-        return spawn.spawnCreep(body, role + Game.time, {
-            memory: { role, type }
-        });
-    } catch (e) {
-        console.log('Error spawning creep:', role, e);
-        return null;
+    const creepName = role + Game.time;
+    const result = spawn.spawnCreep(body, creepName, {
+        memory: { role, type }
+    });
+
+    if (result === OK) {
+        console.log('Spawning new', role, type, creepName);
+    } else {
+        console.log('Error spawning new', role, type, result);
     }
+
+    return result;
 }
 
-module.exports = function spawnHelper() {
+module.exports.spawnHelper = function () {
     let creep = null;
+    let counts = getCounts();
+    
+    memoryCleanup();
+
+    if (!spawn || spawn.spawning) {
+        return counts;
+    }
 
     const bodyParts = {
-        default: [MOVE, WORK, CARRY],
+        default: [MOVE, WORK, WORK, CARRY],
         harvester: {
             shovel: [MOVE, WORK, WORK],
             truck: [MOVE, MOVE, CARRY, CARRY]
         },
     };
-
-    memoryCleanup();
-    getCounts();
 
     if (counts.harvester < 4) {
         if (counts.harvester === 0 || counts.shovel < 2 && counts.truck > 0) {
@@ -74,5 +83,5 @@ module.exports = function spawnHelper() {
         creep = createCreep(bodyParts.default, 'upgrader');
     }
 
-    return creep;
+    return counts;
 }

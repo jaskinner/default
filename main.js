@@ -5,8 +5,9 @@ var Upgrader = require('Upgrader');
 var Builder = require('Builder');
 var Repairer = require('Repairer');
 
+
 module.exports.loop = function () {
-    spawnHelper();
+    helpers.spawnHelper();
 
     for (let creepName in Game.creeps) {
         let creep = Game.creeps[creepName];
@@ -24,10 +25,6 @@ module.exports.loop = function () {
             newCreep = new Repairer(creep);
         }
 
-        try {
-            newCreep.run();
-        } catch (e) {
-            console.log('Error running creep:', creepName, e);
-        }
+        newCreep.run();
     }
 }
