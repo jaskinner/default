@@ -1,4 +1,4 @@
-var spawnHelper = require('helpers');
+const helpers = require('helpers');
 var Harvester = require('Harvester');
 var Truck = require('Truck');
 var Upgrader = require('Upgrader');

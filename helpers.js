@@ -1,12 +1,5 @@
-let spawn = Game.spawns['Spawn1'];
-
-let creep;
-
-const initCreep = _.filter(Game.creeps, (creep) => creep.memory.type === 'init');
-
-const counts = {};
-
 function getCounts() {
+    const counts = {};
     counts.creep = Object.keys(Game.creeps).length;
     counts.harvester = _.filter(Game.creeps, (creep) => creep.memory.role === 'harvester').length;
     counts.upgrader = _.filter(Game.creeps, (creep) => creep.memory.role === 'upgrader').length;
@@ -21,14 +14,6 @@ function getCounts() {
         }
     }).length;
 }
-
-const bodyParts = {
-    default: [MOVE, WORK, CARRY],
-    harvester: {
-        shovel: [MOVE, WORK, WORK],
-        truck: [MOVE, MOVE, CARRY, CARRY]
-    },
-};
 
 function memoryCleanup() {
     for (let creepName in Memory.creeps) {
@@ -54,6 +39,16 @@ function createCreep(body, role, type) {
 }
 
 module.exports = function spawnHelper() {
+    let creep = null;
+
+    const bodyParts = {
+        default: [MOVE, WORK, CARRY],
+        harvester: {
+            shovel: [MOVE, WORK, WORK],
+            truck: [MOVE, MOVE, CARRY, CARRY]
+        },
+    };
+
     memoryCleanup();
     getCounts();
 
